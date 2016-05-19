@@ -10,4 +10,4 @@ all :
 
 
 clean :
-	-rm *.aux *.bbl *.log *.synctex.gz
+	-rm *.aux *.bbl *.log *.synctex.gz *.blg
