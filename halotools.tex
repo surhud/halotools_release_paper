@@ -101,6 +101,11 @@ Halotools is an affiliated package\footnote{\tt http://www.astropy.org/affiliate
 
 Halotools has been developed fully in the open since the inception of the project. Version control for the code base is managed using git\footnote{\tt http://git-scm.com}, and the public version of the code is hosted on GitHub\footnote{\tt http://www.github.com}. The latest stable version of the code can be installed via {\tt pip install halotools}, but at any given time the {\tt master} branch of the code on {\tt https://github.com/astropy/halotools} may have features and performance enhancements that are being prepared for the next release. A concerted effort is made to ensure that only thoroughly tested and documented code appears in the public {\tt master} branch, though Halotools users should be aware of the distinction between the bleeding edge version in {\tt master} and the official release version available through {\tt pip}. 
 
+Documentation of the code base is generated via sphinx\footnote{\tt http://www.sphinx-doc.org} and is hosted on ReadTheDocs\footnote{\tt https://readthedocs.io} at {\tt http://halotools.readthedocs.io}. The public repository {\tt https://github.com/astropy/halotools} has a webhook set up so that whenever there is a change to the {\tt master} branch, the documentation is automatically rebuilt to reflect the most up-to-date version of {\tt master}. 
+
+Every user-facing class, method and function in Halotools has a docstring describing its general purpose, its inputs and output, and also providing an explicit example usage. The docstring for many functions with complex behavior comes with a hyperlink to a separate section of the documentation in which mathematical derivations and algorithm notes are provided. The documentation also includes a large number of step-by-step tutorials and example Halotools analyses. The goal of these tutorials is more than simple code demonstration: the tutorials are intended to be a pedagogical tool illustrating how to analyze simulations and study models of the galaxy-halo connection in an efficient and reproducible manner. 
+
+
 %---------------------------
 \section{Planned Features}
 \label{section:planned_features}
