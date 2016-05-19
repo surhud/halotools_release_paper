@@ -36,15 +36,21 @@
 
 \bibliographystyle{mn2e}
 
-%Title of paper---------------------------------------------------------
+
+% misc 
+\newcommand{\ben}{\begin{enumerate}}
+\newcommand{\een}{\end{enumerate}}
+\newcommand{\bit}{\begin{itemize}}
+\newcommand{\eit}{\end{itemize}}
+
+\newcommand{\rproj}{r_{\rm p}}
+
+\newcommand{\mockobs}{{\tt mock\_observables }}
 
 
-\title[Halotools]
+\title[Presenting Halotools]
 {
 High-Precision Modeling of Large-Scale Structure: \\An open source approach with Halotools}
-
-% Authors ------------------------------------------------------
-
 
 \author[Hearin et al.]
 {Andrew P. Hearin$^{1}$, Duncan Campbell$^{2},$ Erik Tollerud$^{2,3}$\newauthor
@@ -88,6 +94,42 @@ Halotools is an affiliated package\footnote{\tt http://www.astropy.org/affiliate
 \subsection{Mock Observations}
 \label{subsection:mock_observables}
 %---------------------------
+
+In the analysis of halo and (mock) galaxy catalogs, many of the same calculations are performed over and over again. How many pairs of points are separated by some distance $r$? What is the two-point correlation function of some sample of points? What is the host halo mass of some sample of subhalos? What is the local environmental density of some collection of galaxies? It is common to calculate the answers to these and other similar questions in an MCMC-type analysis, when high-performance is paramount. Even outside of the context of likelihood analyses, the sheer size of present-day cosmological simulations presents a formidable computational challenge to evaluate these functions in a reasonable runtime. There is also the notorious complicating nuisance of properly accounting for the periodic boundary conditions of a simulation. Much research time has been wasted by many different researchers writing their own private versions of these calculations, writing code that is not portable as it was developed making hard assumptions that are only applicable to the immediate problem at hand. 
+
+The {\tt mock\_observables} sub-package is designed to remedy this situation. This sub-package contains a large collection of functions that are commonly encountered when analyzing halo and galaxy catalogs, including:
+
+\bit
+\item The many variations of two-point correlation functions, 
+\bit
+\item The three-dimensional correlation function $\xi(r),$ 
+\item redshift-space correlation function $\xi(\rproj, \pi),$
+\item The projected correlation function $w_{\rm p}(\rproj),$
+\item Projected surface density $\Delta\Sigma(r_{\rm p})$ (aka galaxy-galaxy lensing),
+\item RSD multipoles $\xi_{\ell}(s).$
+\eit
+\item Marked correlation functions $\mathcal{M}(r)$
+\item Friends-of-friends group identification
+\item {\em Group aggregation} calculations, e.g., calculating the total stellar mass of galaxies of a common group $M_{\ast}^{\rm tot}.$
+\item {\em Isolation criteria}, e.g., identifying those galaxies with no more massive companion inside some search radius, 
+\item Pairwise velocity statistics, e.g, the line-of-sight velocity dispersion as a function of projected distance $\sigma_{\rm los}(\rproj)$
+\item Void probability function $P_{\rm void}(r).$
+\eit
+
+The \mockobs sub-package contains heavily optimized implementations of all the above functions, as well as a variety of others. Every function in \mockobs has a stable, user-friendly API that is consistently applied across the package. The doctsring of all functions contains an explicit example of how to call the function, and in many cases there is a step-by-step tutorial showing how the function might be used in a typical analysis. Considerable effort has been taken to write \mockobs to be modular, so that users can easily borrow the algorithm patterns to write their own variation on the provided calculations. 
+
+
+\subsection{Optimization strategy}
+\label{subsection:optimization}
+
+The implementation of the \mockobs functions reflects the general optimization strategy employed throughout Halotools. 
+Bounds-checking, exception-handling, and high-level control flow is written in pure python. All algorithms are intentionally formulated to rely on vectorized functions in {\tt Numpy} such as {\tt np.searchsorted, np.unique} and {\tt np.repeat}. Whenever possible, the function is written to be trivially parallelized using python's native {\tt multiprocessing} module. 
+
+In many cases there is simply no memory efficient way to vectorize the problem, and it becomes necessary to write explicit loops over large numbers of points. In such situations, care is taken to pinpoint the specific part of the calculation that is the bottleneck; that section, and that section only, is written in cython. 
+
+
+
+
 
 %---------------------------
 \subsection{Managing Simulation Data}
