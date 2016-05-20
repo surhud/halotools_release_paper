@@ -46,6 +46,8 @@
 \newcommand{\rproj}{r_{\rm p}}
 
 \newcommand{\mockobs}{{\tt mock\_observables }}
+\newcommand{\emodels}{{\tt empirical\_models }}
+\newcommand{\sims}{{\tt sim\_manager }}
 
 
 \title[Presenting Halotools]
@@ -85,18 +87,13 @@ Halotools is an affiliated package\footnote{\tt http://www.astropy.org/affiliate
 \label{section:overview}
 %---------------------------
 
-\subsection{Optimization strategy}
-\label{subsection:optimization}
+Halotools is composed almost entirely in python with syntax that is compatible with both 2.7.x and 3.x versions of the language. Bounds-checking, exception-handling, and high-level control flow are always written in pure python. All algorithms are intentionally formulated to rely on vectorized functions in {\tt Numpy} such as {\tt np.searchsorted, np.unique} and {\tt np.repeat}. Whenever possible, performance-critical functions are written to be trivially parallelized using python's native {\tt multiprocessing} module. In many cases there is simply no memory efficient way to vectorize the problem, and it becomes necessary to write explicit loops over large numbers of points. In such situations, care is taken to pinpoint the specific part of the calculation that is the bottleneck; that section, and that section only, is written in cython. 
 
-Bounds-checking, exception-handling, and high-level control flow is written in pure python. All algorithms are intentionally formulated to rely on vectorized functions in {\tt Numpy} such as {\tt np.searchsorted, np.unique} and {\tt np.repeat}. Whenever possible, the function is written to be trivially parallelized using python's native {\tt multiprocessing} module. 
+Halotools is designed with a high degree of modularity, so that users can pick and choose the features that are suitable to their science applications. At the highest level, this modularity is reflected in the organization of the package into sub-packages. For Halotools v0.2, there are three major sub-packages. The \emodels sub-package described in \S\ref{subsection:empirical_models} contains the implementation of models of the galaxy-halo connection, as well as a flexible object-oriented platform for users to design their own models. The \mockobs sub-package described in \S\ref{subsection:mock_observables} contains a collection of functions that can be used to generate predictions for models in a manner that can be directly compared to astronomical observations. Many of the functions in \mockobs should also be of general use in the analysis of halo catalogs. The \sims sub-package described in \S\ref{subsection:sim_manager} is responsible for reducing ``raw" halo catalogs into efficiently organized fast-loading hdf5 files, and for creating and keeping track of a persistent memory of where the simulation data is stored on disk. 
 
-In many cases there is simply no memory efficient way to vectorize the problem, and it becomes necessary to write explicit loops over large numbers of points. In such situations, care is taken to pinpoint the specific part of the calculation that is the bottleneck; that section, and that section only, is written in cython. 
+Although these sub-packages are designed to work together seamlessly, each individual sub-package has entirely stand-alone functionality that is intended to be useful even in the absence of the others. For example, while Halotools does not provide pre-processed halo catalogs from the Millennium simulation, the \sims sub-package can nonetheless be used to process and cache Millennium halos into a convenient, self-expressive format that users of that simulation may find useful. The \emodels sub-package can be used to populate mock galaxies into the the halos of any cosmological simulation, where the populated halos could be identified by any algorithm. The functions in the \mockobs sub-package simply accept point-data as inputs, and so these functions could be used to generate observational predictions for semi-analytical models that otherwise have no connection to Halotools. 
 
-%---------------------------
-\section{Organization into sub-packages}
-\label{section:subpackages}
-%---------------------------
-
+In the subsections below we outline each of these sub-packages in turn, though we refer the reader to {\tt halotools.readthedocs.io} for more comprehensive descriptions. 
 
 %---------------------------
 \subsection{Empirical Models}
