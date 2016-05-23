@@ -92,7 +92,7 @@ Halotools is an affiliated package\footnote{\tt http://www.astropy.org/affiliate
 \label{section:overview}
 %---------------------------
 
-Halotools is composed almost entirely in python with syntax that is compatible with both 2.7.x and 3.x versions of the language. Bounds-checking, exception-handling, and high-level control flow are always written in pure python. Whenever possible, performance-critical functions are written to be trivially parallelized using python's native {\tt multiprocessing} module. Halotools relies heavily on vectorized functions in {\tt Numpy} as a core optimization strategy. However, in many cases there is simply no memory efficient way to vectorize a calculation, and it becomes necessary to write explicit loops over large numbers of points. In such situations, care is taken to pinpoint the specific part of the calculation that is the bottleneck; that section, and that section only, is written in cython (or straight C as a last resort). 
+Halotools is composed almost entirely in python with syntax that is compatible with both 2.7.x and 3.x versions of the language. Bounds-checking, exception-handling, and high-level control flow are always written in pure python. Whenever possible, performance-critical functions are written to be trivially parallelized using python's native {\tt multiprocessing} module. Halotools relies heavily on vectorized functions in {\tt Numpy} as a core optimization strategy. However, in many cases there is simply no memory efficient way to vectorize a calculation, and it becomes necessary to write explicit loops over large numbers of points. In such situations, care is taken to pinpoint the specific part of the calculation that is the bottleneck; that section, and that section only, is written in cython. 
 
 Halotools is designed with a high degree of modularity, so that users can pick and choose the features that are suitable to their science applications. At the highest level, this modularity is reflected in the organization of the package into sub-packages. For Halotools v0.2, there are three major sub-packages. The \emodels sub-package described in \S\ref{subsection:empirical_models} contains the implementation of models of the galaxy-halo connection, as well as a flexible object-oriented platform for users to design their own models. The \mockobs sub-package described in \S\ref{subsection:mock_observables} contains a collection of functions that can be used to generate predictions for models in a manner that can be directly compared to astronomical observations. Many of the functions in \mockobs should also be of general use in the analysis of halo catalogs. The \sims sub-package described in \S\ref{subsection:sim_manager} is responsible for reducing ``raw" halo catalogs into efficiently organized fast-loading hdf5 files, and for creating and keeping track of a persistent memory of where the simulation data is stored on disk. 
 
@@ -101,29 +101,49 @@ Although these sub-packages are designed to work together, each individual sub-p
 In the subsections below we outline each of these sub-packages in turn, though we refer the reader to {\tt halotools.readthedocs.io} for more comprehensive descriptions. 
 
 %---------------------------
+\subsection{Managing Simulation Data}
+\label{subsection:sim_manager}
+%---------------------------
+
+One of the most tedious tasks in simulation analysis is the initial process of getting started with a halo catalog: reading large data files storing the halos (typically ASCII-formatted), making cuts on halos, adding additional columns, and storing the reduced and value-added catalog on disk for later use. In our experience with simulation analysis, one of the most common sources of bugs comes from these initial bookkeeping exercises. 
+
+\begin{lstlisting}[float=*t, label=some-code,caption = Loading a cached halo catalog into memory \label{code:cachedsim}]
+from halotools.mock_observables import CachedHaloCatalog
+halocat = CachedHaloCatalog(simname = `bolshoi', redshift = 0.5)
+
+print(halocat.halo_table[0:9]) # view the first ten halos in the catalog
+print(halocat.Lbox, halocat.particle_mass) # inspect the halo catalog metadata
+\end{lstlisting}
+
+The \sims sub-package has been written to standardize this process so that users can get started with full-fledge halo catalog analysis from just a few lines of code. The {\tt sim\_manager.RockstarHlistReader} class allows users to quickly create a Halotools-formatted catalog starting from the typical ASCII output of the {\tt Rockstar} halo-finder \citep{rockstar_trees, behroozi_rockstar11}. Users wishing to work with catalogs of halos identified by algorithms other than {\tt Rockstar} can use the {\tt sim\_manager.TabularAsciiReader} class to initially process their ascii data. Both readers are built around a convenient API that uses Python's native ``lazy evaluation" functionality to select on-the-fly only those columns and rows that are of interest, making these readers highly memory efficient. 
+
+All Halotools-formatted catalogs are python objects storing the halo catalog itself in the form of an Astropy Table, and also storing some metadata about the simulated halos. In order to build an instance of a Halotools-formatted catalog, a large collection of self-consistency checks about the halo data and metadata are performed, and an exception is raised if any inconsistency is detected. These checks are automatically carried out at the initial processing stage, and also every time the catalog is loaded into memory, to help ensure that the catalog is processed correctly and does not become corrupt over time. 
+
+The \sims sub-package allows users to cache their processed halo catalogs when they are saved to disk, creating the option to load their catalogs into memory with the simple and intuitive syntax shown in code block \ref{code:cachedsim}. 
+
+
+The cached simulations are stored in the form of an hdf5 file.\footnote{\tt http://www.h5py.org}. This binary file format is fast-loading and permits metadata to be bound directly to the file in a transparent manner, so that the cached binary file is a self-expressive object. The {\tt sim\_manager.HaloTableCache} class provides an object-oriented interface for managing the cache of simulations, but users are also free to work directly with the cache log, which is a simple, human-readable text file stored in \$HOME/.astropy/cache/halotools/halo\_table\_cache\_log.txt.
+
+Using the Halotools caching system is optional in every respect. Users who prefer their own system for managing simulated data are free to do so in whatever manner they wish; they need only pass the necessary halo data and metadata to the {\tt sim\_manager.UserSuppliedHaloCatalog} class, and the full functionality of all sub-packages of Halotools works with the resulting object instance.  
+
+The Halotools developers manage a collection of pre-processed halo catalogs that are available for download either with the {\tt sim\_manager.DownloadManager} class, or with the command-line script {\tt halotools/scripts/download\_additional\_halocat.py}. Through either download method, the catalogs are automatically cached and science-ready as soon as the download completes. Halotools currently offers pre-processed halo catalogs for Rockstar-identified halos from four different simulations: {\tt bolshoi, bolshoi-planck, consuelo} and {\tt multidark}, for which snapshots at $z=0, 0.5, 1$ and $2$ are available.
+
+%---------------------------
 \subsection{Empirical Models}
 \label{subsection:empirical_models}
 %---------------------------
+
+All Halotools models of the galaxy-halo connection are contained in the \emodels sub-package. Halotools models come into two categories: {\em composite models} and {\em component models}. 
+A {\em composite model} is a complete description of the mapping(s) between dark matter halos and all properties of their resident galaxy population. A composite model provides sufficient information to populate an ensemble of halos with a Monte Carlo realization of a galaxy population. All composite models are built from a collection of independently-defined {\em component models}. A component model provides a map between dark matter halos and a single property of the resident galaxy population. Examples component models include the stellar-to-halo mass relation, an NFW radial profile or the halo mass-dependence of the quenched fraction.
+
+
+
 
 %---------------------------
 \subsection{Mock Observations}
 \label{subsection:mock_observables}
 %---------------------------
 
-%%%%%%%%%%%%%%%%%%%%%%%%% FIGURE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure*}
-\begin{center}
-\includegraphics[width=8.3cm]{./FIGS/one_two_halo_clustering.png}
-\includegraphics[width=8.3cm]{./FIGS/wp_red_blue_cross.png}
-\includegraphics[width=8.3cm]{./FIGS/cluster_bcg_infall_velocity.png}
-\includegraphics[width=8.3cm]{./FIGS/radial_profile_halocat_tutorial_fig1.png}
-\caption{
-Four example calculations done with Halotools demonstrating the diversity of the \mockobs sub-package. Each is part of a tutorial found in {\tt http://halotools.readthedocs.io}, to which we refer the reader for details. Here we only point out that each panel demonstrates the result of a heavily optimized function with a user-friendly API requiring minimal setup. {\em Top left:} Three-dimensional correlation function of mock galaxies $\xi_{\rm gg}(r)$ split into contributions from pairs of galaxies occupying a common halo (1-halo term), and pairs in distinct halos (2-halo term). {\em Top right:} Projected correlation function $w_{\rm p}(\rproj)$ of star-forming and quiescent galaxies, as well as their cross-correlation. {\em Bottom left:} Mean pairwise radial velocity of galaxies in the neighborhood of a cluster BCG. {\em Bottom right:} As a function of the $R_{\rm vir}-$normalized distance to a cluster, we show the mean mass accretion rate of nearby lower-mass subhalos. 
-}
-\label{fig:satcen}
-\end{center}
-\end{figure*}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 In the analysis of halo and (mock) galaxy catalogs, many of the same calculations are performed over and over again. How many pairs of points are separated by some distance $r$? What is the two-point correlation function of some sample of points? What is the host halo mass of some sample of subhalos? What is the local environmental density of some collection of galaxies? It is common to calculate the answers to these and other similar questions in an MCMC-type analysis, when high-performance is paramount. Even outside of the context of likelihood analyses, the sheer size of present-day cosmological simulations presents a formidable computational challenge to evaluate such functions in a reasonable runtime. There is also the notorious complicating nuisance of properly accounting for the periodic boundary conditions of a simulation. Much research time has been wasted by many different researchers writing their own private versions of these calculations, writing code that is not extensible as it was developed making hard assumptions that are only applicable to the immediate problem at hand. 
 
@@ -148,33 +168,20 @@ The {\tt mock\_observables} sub-package is designed to remedy this situation. Th
 
 The \mockobs sub-package contains heavily optimized implementations of all the above functions, as well as a variety of others. Every function in \mockobs has a stable, user-friendly API that is consistently applied across the package. The docstring of all functions contains an explicit example of how to call the function, and in many cases there is a step-by-step tutorial showing how the function might be used in a typical analysis. Considerable effort has been taken to write \mockobs to be modular, so that users can easily borrow the algorithm patterns to write their own variation on the provided calculations. 
 
-%---------------------------
-\subsection{Managing Simulation Data}
-\label{subsection:sim_manager}
-%---------------------------
-
-One of the most tedious tasks in simulation analysis is the initial process of getting started with a halo catalog: reading large data files storing the halos (typically ASCII-formatted), making cuts on halos, adding additional columns, and storing the reduced and value-added catalog on disk for later use. In our experience with simulation analysis, one of the most common sources of bugs comes from these initial bookkeeping exercises. 
-
-The \sims sub-package has been written to standardize this process so that users can get started with full-fledge halo catalog analysis from just a few lines of code. The {\tt sim\_manager.RockstarHlistReader} class allows users to quickly create a Halotools-formatted catalog starting from the typical ASCII output of the {\tt Rockstar} halo-finder \citep{rockstar_trees, behroozi_rockstar11}. Users wishing to work with catalogs of halos identified by algorithms other than {\tt Rockstar} can use the {\tt sim\_manager.TabularAsciiReader} class to initially process their ascii data. Both readers are built around a convenient API that uses Python's native ``lazy evaluation" functionality to select on-the-fly only those columns and rows that are of interest, making these readers highly memory efficient. 
-
-All Halotools-formatted catalogs are python objects storing the halo catalog itself in the form of an Astropy Table, and also storing some metadata about the simulated halos. In order to build an instance of a Halotools-formatted catalog, a large collection of self-consistency checks about the halo data and metadata are performed, and an exception is raised if any inconsistency is detected. These checks are automatically carried out at the initial processing stage, and also every time the catalog is loaded into memory, to help ensure that the catalog is processed correctly and does not become corrupt over time. 
-
-The \sims sub-package allows users to cache their processed halo catalogs when they are saved to disk, creating the option to load their catalogs into memory with simple and intuitive syntax: 
-
-\begin{lstlisting}[float=*t, label=some-code,caption = Loading a cached halo catalog into memory]
-from halotools.mock_observables import CachedHaloCatalog
-halocat = CachedHaloCatalog(simname = `bolshoi', redshift = 0.5)
-
-print(halocat.halo_table[0:9]) # view the first few halos in the catalog
-print(halocat.Lbox, halocat.particle_mass) # check halo catalog metadata
-\end{lstlisting}
-
-The cached simulations are stored in the form of an hdf5 file.\footnote{\tt http://www.h5py.org}. This binary file format is fast-loading and permits metadata to be bound directly to the file in a transparent manner, so that the cached binary file is a self-expressive object. The {\tt sim\_manager.HaloTableCache} class provides an object-oriented interface for managing the cache of simulations, but users are also free to work directly with the cache log, which is a simple, human-readable text file stored in \$HOME/.astropy/cache/halotools/halo\_table\_cache\_log.txt.
-
-Using the Halotools caching system is optional in every respect. Users who prefer their own system for managing simulated data are free to do so in whatever manner they wish; they need only pass the necessary halo data and metadata to the {\tt sim\_manager.UserSuppliedHaloCatalog} class, and the full functionality of all sub-packages of Halotools works with the resulting object instance.  
-
-The Halotools developers manage a collection of pre-processed halo catalogs that are available for download either with the {\tt sim\_manager.DownloadManager} class, or with the command-line script {\tt halotools/scripts/download\_additional\_halocat.py}. Through either download method, the catalogs are automatically cached and science-ready as soon as the download completes. Halotools currently offers pre-processed halo catalogs for Rockstar-identified halos from four different simulations: {\tt bolshoi, bolshoi-planck, consuelo} and {\tt multidark}, for which snapshots at $z=0, 0.5, 1$ and $2$ are available.
-
+%%%%%%%%%%%%%%%%%%%%%%%%% FIGURE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}
+\begin{center}
+\includegraphics[width=8.3cm]{./FIGS/one_two_halo_clustering.png}
+\includegraphics[width=8.3cm]{./FIGS/wp_red_blue_cross.png}
+\includegraphics[width=8.3cm]{./FIGS/cluster_bcg_infall_velocity.png}
+\includegraphics[width=8.3cm]{./FIGS/radial_profile_halocat_tutorial_fig1.png}
+\caption{
+Four example calculations done with Halotools demonstrating the diversity of the \mockobs sub-package. Each figure is part of a tutorial found in {\tt http://halotools.readthedocs.io}, to which we refer the reader for details. Here we only point out that each panel demonstrates the result of a heavily optimized function with a user-friendly API requiring minimal setup. {\em Top left:} Three-dimensional correlation function of mock galaxies $\xi_{\rm gg}(r)$ split into contributions from pairs of galaxies occupying a common halo (1-halo term), and pairs in distinct halos (2-halo term). {\em Top right:} Projected correlation function $w_{\rm p}(\rproj)$ of star-forming and quiescent galaxies, as well as their cross-correlation. {\em Bottom left:} Mean pairwise radial velocity of galaxies in the neighborhood of a cluster BCG. {\em Bottom right:} As a function of the $R_{\rm vir}-$normalized distance to a cluster, we show the mean mass accretion rate of nearby lower-mass subhalos. 
+}
+\label{fig:mockobs}
+\end{center}
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %---------------------------
 \section{Package Development}
