@@ -1,20 +1,23 @@
-\documentclass[usenatbib,usegraphicx,letterpaper]{mn2e}
-\usepackage[totalwidth=480pt,totalheight=680pt]{geometry}
+\documentclass[twocolumn, tighten]{aastex6}
+
+\usepackage{amsmath}
+\usepackage{amstext}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{acronym}
+\usepackage{hyperref, url}
 
 \usepackage{amssymb}
 \usepackage{epsfig}
 \usepackage{amsmath}
 \usepackage{color}
-\usepackage[dvipsnames]{xcolor}
-%\usepackage{hyperref}
 \usepackage{yfonts}
 \usepackage{epsfig}  \usepackage{graphicx}   \usepackage{rotating}
 
-\usepackage{listings, multicol}
-\usepackage{caption}
-\DeclareCaptionFont{white}{\color{white}}
-\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
-\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+%\usepackage{listings}
+%\DeclareCaptionFont{white}{\color{white}}
+%\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+%\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
 
 %------- New commands
 
@@ -25,21 +28,18 @@
 
 %------ Journals
 
-\newcommand{\mnras}{Mon. Not. R. Astron. Soc.}
-\newcommand{\apjl}{Astrophys. J. Lett.}
-\newcommand{\aj}{Astron. J.}
-\newcommand{\aap}{Astron. Astrophys.}
-\newcommand{\araa}{Ann. Rev. Astron. Astroph.}
-\newcommand{\apjs}{Astrophys. J. Suppl. Ser.}
-\newcommand{\physrep}{Phys. Rep.}
-\newcommand{\jcap}{JCAP}
-\newcommand{\prd}{Phys. Rev. D}
-\newcommand{\apj}{ApJ}
+%\newcommand{\apjl}{Astrophys. J. Lett.}
+%\newcommand{\aj}{Astron. J.}
+%\newcommand{\aap}{Astron. Astrophys.}
+%\newcommand{\araa}{Ann. Rev. Astron. Astroph.}
+%\newcommand{\apjs}{Astrophys. J. Suppl. Ser.}
+%\newcommand{\physrep}{Phys. Rep.}
+%\newcommand{\jcap}{JCAP}
+%\newcommand{\prd}{Phys. Rev. D}
+%\newcommand{\apj}{ApJ}
 
 \newcommand{\wprp}{w_{\mathrm{p}}}
 \newcommand{\rp}{r_{\mathrm{p}}}
-
-\bibliographystyle{mn2e}
 
 
 % misc 
@@ -55,35 +55,34 @@
 \newcommand{\sims}{{\tt sim\_manager }}
 
 
-\title[Presenting Halotools v0.2]
-{
-High-Precision Modeling of Large-Scale Structure: \\An open source approach with Halotools}
 
-\author[Hearin et al.]
-{Andrew P. Hearin$^{1}$, Duncan Campbell$^{2},$ Erik Tollerud$^{2,3},$\newauthor
-Matt Becker$^{4}$, Peter Behroozi$^{5}$, Benedikt Diemer$^{6}$, Yu Feng$^{7}$, \newauthor
-Nathan Goldbaum$^{8}$, Elise Jennings$^{9}$, Alexie Leauthaud$^{10}$, Yao-Yuan Mao$^{11}$, \newauthor
-Surhud More$^{12}$, John Parejko$^{13}$, Manodeep Sinha$^{14}$, Brigitta Sipocz$^{15}$, \newauthor
-Doug Watson$^{16}$, Andrew Zentner$^{17}$ \\
-$^1$Yale Center for Astronomy \& Astrophysics, Yale University, New Haven, CT\\
-$^2$Department of Astronomy, Yale University, P.O. Box 208101, New Haven, CT\\
-$^3$Space Telescope Science Institute, Baltimore, MD 21218, USA\\
-$^{4-17}$Affiliation needed\\
-}
-
-\pagerange{\pageref{firstpage}--\pageref{lastpage}} \pubyear{}
+\shorttitle{Presenting Halotools v0.2}
+\shortauthors{Hearin, Campbell, Tollerud, et al.}
 
 \begin{document}
 
-\maketitle
+\title{High-Precision Modeling of Large-Scale Structure: \\An open source approach with Halotools}
+
+\author{Andrew P. Hearin\altaffilmark{1}, Duncan Campbell\altaffilmark{2}, Erik Tollerud\altaffilmark{3},
+Matt Becker\altaffilmark{4}, Peter Behroozi\altaffilmark{4}, Benedikt Diemer\altaffilmark{4}, Yu Feng\altaffilmark{4}, 
+Nathan Goldbaum\altaffilmark{4}, Elise Jennings\altaffilmark{1}, Alexie Leauthaud\altaffilmark{4}, Yao-Yuan Mao\altaffilmark{4}, 
+Surhud More\altaffilmark{4}, John Parejko\altaffilmark{4}, Manodeep Sinha\altaffilmark{4}, Brigitta Sipocz\altaffilmark{4}, 
+Doug Watson\altaffilmark{4}, Andrew Zentner\altaffilmark{4} 
+}
+\altaffiltext{1}{Yale Center for Astronomy \& Astrophysics, Yale University, New Haven, CT}
+\altaffiltext{2}{Department of Astronomy, Yale University, P.O. Box 208101, New Haven, CT}
+\altaffiltext{3}{Space Telescope Science Institute, Baltimore, MD 21218, USA}
+\altaffiltext{4}{Affiliation needed}
+
 %----------------------------------------------------------------
 %%%%%%%%%%%%%%%%%%%%%%%  A B S T R A C T %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{abstract}
 
-We  present the first official release of Halotools (v0.2), a community-driven python package designed to build and test models of the galaxy-halo connection. Halotools provides a modular platform for creating mock universes with a rich variety of models of galaxy evolution, such as the HOD, CLF, abundance matching, assembly biased models, halo profiles, velocity bias, and many other model styles and features. The package has an extensive, heavily optimized toolkit to make mock observations on a synthetic galaxy population, including galaxy clustering, galaxy-galaxy lensing, galaxy group identification, RSD multipoles, void statistics, pairwise velocities and others. Halotools is written in a object-oriented style that enables complex models to be built from a set of simple, interchangeable components, including those of your own creation. Halotools has a rigorously maintained automated testing suite and is exhaustively documented on halotools.readthedocs.org, which includes quickstart guides, source code notes and a large collection of worked examples. The documentation effectively serves as an online textbook on how to build empirical models of galaxy formation with python. We conclude this paper by describing how Halotools can be used to constrain galaxy formation physics, and by outlining the Halotools program to help prepare for the arrival of Stage IV dark energy experiments.
-
+We  present the first official release of Halotools (v0.2), a community-driven python package designed to build and test models of the galaxy-halo connection. Halotools provides a modular platform for creating mock universes with a rich variety of models of galaxy evolution, such as the HOD, CLF, abundance matching, assembly biased models, halo profiles, velocity bias, and many other model styles and features. The package has an extensive, heavily optimized toolkit to make mock observations on a synthetic galaxy population, including galaxy clustering, galaxy-galaxy lensing, galaxy group identification, RSD multipoles, void statistics, pairwise velocities and others. Halotools is written in a object-oriented style that enables complex models to be built from a set of simple, interchangeable components, including those of your own creation. Halotools has a rigorously maintained automated testing suite and is exhaustively documented on halotools.readthedocs.org, which includes quickstart guides, source code notes and a large collection of worked examples. The documentation effectively serves as an online textbook on how to build empirical models of galaxy formation with python. 
 \end{abstract} 
+
+\maketitle
 
 %---------------------------
 \section{Introduction}
@@ -120,13 +119,13 @@ In the subsections below we outline each of these sub-packages in turn, though w
 
 One of the most tedious tasks in simulation analysis is the initial process of getting started with a halo catalog: reading large data files storing the halos (typically ASCII-formatted), making cuts on halos, adding additional columns, and storing the reduced and value-added catalog on disk for later use. In our experience with simulation analysis, one of the most common sources of bugs comes from these initial bookkeeping exercises. 
 
-\begin{lstlisting}[float=*t, label=some-code,caption = Loading a cached halo catalog into memory \label{code:cachedsim}]
-from halotools.sim_manager import CachedHaloCatalog
-halocat = CachedHaloCatalog(simname = `bolshoi', redshift = 0.5)
+%\begin{lstlisting}[float=*t, label=some-code,caption = Loading a cached halo catalog into memory \label{code:cachedsim}]
+%from halotools.sim_manager import CachedHaloCatalog
+%halocat = CachedHaloCatalog(simname = `bolshoi', redshift = 0.5)
 
-print(halocat.halo_table[0:9]) # view the first ten halos in the catalog
-print(halocat.Lbox, halocat.particle_mass) # inspect the halo catalog metadata
-\end{lstlisting}
+%print(halocat.halo_table[0:9]) # view the first ten halos in the catalog
+%print(halocat.Lbox, halocat.particle_mass) # inspect the halo catalog metadata
+%\end{lstlisting}
 
 The \sims sub-package has been written to standardize this process so that users can get started with full-fledge halo catalog analysis from just a few lines of code. The {\tt sim\_manager.RockstarHlistReader} class allows users to quickly create a Halotools-formatted catalog starting from the typical ASCII output of the {\tt Rockstar} halo-finder \citep{behroozi_rockstar11, rockstar_trees}. Users wishing to work with catalogs of halos identified by algorithms other than {\tt Rockstar} can use the {\tt sim\_manager.TabularAsciiReader} class to initially process their ascii data. Both readers are built around a convenient API that uses Python's native ``lazy evaluation" functionality to select on-the-fly only those columns and rows that are of interest, making these readers highly memory efficient. 
 
@@ -160,16 +159,16 @@ By contrast, in subhalo-based models there is a one-to-one correspondence betwee
 
 Halotools ships with a handful of fully formed prebuilt composite models, each of which has been designed around a model chosen from the literature. All pre-built models can directly populate a simulation with a mock catalog and make observational predictions that can be compared to measurements made on a real galaxy sample. You need only choose the pre-built model and simulation snapshot that is appropriate for your science application, and you can immediately generate a Monte Carlo realization of the model with the syntax shown. The syntax in code block \ref{code:mockpop} shows how to populate the Bolshoi simulation at $z=0$ with an HOD-style model based on \citet{leauthaud11b}. All Halotools models can populate halo catalogs with mock galaxies using the same syntax shown in code block \ref{code:mockpop}, regardless of the features of the model or the selected halo catalog. 
  
-\begin{lstlisting}[float=*t, label=some-code,caption = Creating a mock galaxy catalog \label{code:mockpop}]
-from halotools.sim_manager import CachedHaloCatalog
-halocat = CachedHaloCatalog(simname = `bolshoi', redshift = 0)
+%\begin{lstlisting}[float=*t, label=some-code,caption = Creating a mock galaxy catalog \label{code:mockpop}]
+%from halotools.sim_manager import CachedHaloCatalog
+%halocat = CachedHaloCatalog(simname = `bolshoi', redshift = 0)
 
-from halotools.empirical_models import PrebuiltHodModelFactory
-model = PrebuiltHodModelFactory(`leauthaud11')
+%from halotools.empirical_models import PrebuiltHodModelFactory
+%model = PrebuiltHodModelFactory(`leauthaud11')
 
-model.populate_mock(halocat)
-print(model.mock.galaxy_table[0:9]) # view the first ten galaxies in the catalog
-\end{lstlisting}
+%model.populate_mock(halocat)
+%print(model.mock.galaxy_table[0:9]) # view the first ten galaxies in the catalog
+%\end{lstlisting}
 
 Calling the {\em populate\_mock} method the first time creates the {\em mock} attribute of a model, and triggers a large amount of pre-processing that need only be done once. The algorithm used to repopulate mock catalogs takes advantage of this pre-processing, so that subsequent calls to {\em model.mock.populate()} are far faster. For example, the mock population shown in code block \ref{code:mockpop} based on the \citet{leauthaud11b} model takes just a few hundred milliseconds on a modern laptop. 
 
@@ -298,6 +297,7 @@ We would like to thank the NumPy, SciPy, IPython, Matplotlib, GitHub, ReadTheDoc
 
 A portion of this work was also supported by the National Science Foundation under grant PHYS-1066293 and the hospitality of the Aspen Center for Physics. This work was also partially funded by the U.S. National Science Foundation under grant AST 1517563. 
 
+\bibliographystyle{aasjournal}
 \bibliography{./halotools}
 
 
