@@ -14,10 +14,6 @@
 \usepackage{yfonts}
 \usepackage{epsfig}  \usepackage{graphicx}   \usepackage{rotating}
 
-%\usepackage{listings}
-%\DeclareCaptionFont{white}{\color{white}}
-%\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
-%\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
 
 %------- New commands
 
@@ -27,16 +23,6 @@
 \newcommand{\eeq}{\end{equation}}
 
 %------ Journals
-
-%\newcommand{\apjl}{Astrophys. J. Lett.}
-%\newcommand{\aj}{Astron. J.}
-%\newcommand{\aap}{Astron. Astrophys.}
-%\newcommand{\araa}{Ann. Rev. Astron. Astroph.}
-%\newcommand{\apjs}{Astrophys. J. Suppl. Ser.}
-%\newcommand{\physrep}{Phys. Rep.}
-%\newcommand{\jcap}{JCAP}
-%\newcommand{\prd}{Phys. Rev. D}
-%\newcommand{\apj}{ApJ}
 
 \newcommand{\wprp}{w_{\mathrm{p}}}
 \newcommand{\rp}{r_{\mathrm{p}}}
@@ -118,6 +104,13 @@ In the subsections below we outline each of these sub-packages in turn, though w
 %---------------------------
 
 One of the most tedious tasks in simulation analysis is the initial process of getting started with a halo catalog: reading large data files storing the halos (typically ASCII-formatted), making cuts on halos, adding additional columns, and storing the reduced and value-added catalog on disk for later use. In our experience with simulation analysis, one of the most common sources of bugs comes from these initial bookkeeping exercises. 
+
+%\begin{figure}
+%\center
+%\caption{Loading a cached halo catalog into memory\label{code:cachedsim}}
+%\vspace{0.1in}
+%\fbox{\includegraphics[scale=0.82,clip]{examples/cachedsim.pdf}}
+%\end{figure}
 
 %\begin{lstlisting}[float=*t, label=some-code,caption = Loading a cached halo catalog into memory \label{code:cachedsim}]
 %from halotools.sim_manager import CachedHaloCatalog
