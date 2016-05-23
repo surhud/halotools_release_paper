@@ -105,20 +105,12 @@ In the subsections below we outline each of these sub-packages in turn, though w
 
 One of the most tedious tasks in simulation analysis is the initial process of getting started with a halo catalog: reading large data files storing the halos (typically ASCII-formatted), making cuts on halos, adding additional columns, and storing the reduced and value-added catalog on disk for later use. In our experience with simulation analysis, one of the most common sources of bugs comes from these initial bookkeeping exercises. 
 
-%\begin{figure}
-%\center
-%\caption{Loading a cached halo catalog into memory\label{code:cachedsim}}
-%\vspace{0.1in}
-%\fbox{\includegraphics[scale=0.82,clip]{examples/cachedsim.pdf}}
-%\end{figure}
-
-%\begin{lstlisting}[float=*t, label=some-code,caption = Loading a cached halo catalog into memory \label{code:cachedsim}]
-%from halotools.sim_manager import CachedHaloCatalog
-%halocat = CachedHaloCatalog(simname = `bolshoi', redshift = 0.5)
-
-%print(halocat.halo_table[0:9]) # view the first ten halos in the catalog
-%print(halocat.Lbox, halocat.particle_mass) # inspect the halo catalog metadata
-%\end{lstlisting}
+\begin{figure*}
+\center
+\caption{Loading a cached halo catalog into memory\label{code:cachedsim}}
+\vspace{0.1in}
+\fbox{\includegraphics[scale=0.82,clip]{examples/code_cachedsim.pdf}}
+\end{figure*}
 
 The \sims sub-package has been written to standardize this process so that users can get started with full-fledge halo catalog analysis from just a few lines of code. The {\tt sim\_manager.RockstarHlistReader} class allows users to quickly create a Halotools-formatted catalog starting from the typical ASCII output of the {\tt Rockstar} halo-finder \citep{behroozi_rockstar11, rockstar_trees}. Users wishing to work with catalogs of halos identified by algorithms other than {\tt Rockstar} can use the {\tt sim\_manager.TabularAsciiReader} class to initially process their ascii data. Both readers are built around a convenient API that uses Python's native ``lazy evaluation" functionality to select on-the-fly only those columns and rows that are of interest, making these readers highly memory efficient. 
 
@@ -152,6 +144,13 @@ By contrast, in subhalo-based models there is a one-to-one correspondence betwee
 
 Halotools ships with a handful of fully formed prebuilt composite models, each of which has been designed around a model chosen from the literature. All pre-built models can directly populate a simulation with a mock catalog and make observational predictions that can be compared to measurements made on a real galaxy sample. You need only choose the pre-built model and simulation snapshot that is appropriate for your science application, and you can immediately generate a Monte Carlo realization of the model with the syntax shown. The syntax in code block \ref{code:mockpop} shows how to populate the Bolshoi simulation at $z=0$ with an HOD-style model based on \citet{leauthaud11b}. All Halotools models can populate halo catalogs with mock galaxies using the same syntax shown in code block \ref{code:mockpop}, regardless of the features of the model or the selected halo catalog. 
  
+ \begin{figure*}
+\center
+\caption{Loading a cached halo catalog into memory\label{code:mockpop}}
+\vspace{0.1in}
+\fbox{\includegraphics[scale=0.82,clip]{examples/code_mockpop.pdf}}
+\end{figure*}
+
 %\begin{lstlisting}[float=*t, label=some-code,caption = Creating a mock galaxy catalog \label{code:mockpop}]
 %from halotools.sim_manager import CachedHaloCatalog
 %halocat = CachedHaloCatalog(simname = `bolshoi', redshift = 0)
