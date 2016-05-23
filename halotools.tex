@@ -55,7 +55,7 @@
 \newcommand{\sims}{{\tt sim\_manager }}
 
 
-\title[Presenting Halotools]
+\title[Presenting Halotools v0.2]
 {
 High-Precision Modeling of Large-Scale Structure: \\An open source approach with Halotools}
 
@@ -93,7 +93,7 @@ Motivated by these trends, we present the first official release of Halotools (v
 
 Halotools is an affiliated package\footnote{\tt http://www.astropy.org/affiliated} of Astropy. Affiliated packages are not part of the Astropy core package, but extend the core with typically more domain-specific functionality while maintaining its engineering and interface standards. Since its inception, Halotools has been written in fully public view on {\tt https://github.com/astropy/halotools}, in the spirit of open, reproducible science. 
 
-In this paper, we give an overview of the primary features of the Halotools package. This paper is not intended to be viewed as code documentation, which is available online at {\tt halotools.readthedocs.io}. Our aim here is to give a simple overview of the features of the package, and to serve as a standard reference for scientists using Halotools to support their published work. We outline the basic structure of the code in \S\ref{section:overview}, describe the development workflow in \S\ref{section:development}, discuss future features in \S\ref{section:planned_features} and conclude in \S\ref{section:conclusion}. 
+In this paper, we give an overview of the primary features of the Halotools package. This paper is not intended to be viewed as code documentation, which is available online at {\tt halotools.readthedocs.io}. Our aim here is to give a simple overview of the features of the package, and to serve as a standard reference for scientists using Halotools to support their published work. We outline the basic structure of the code in \S\ref{section:overview}, describe the development workflow in \S\ref{section:development} and conclude in \S\ref{section:conclusion}. 
 
 %---------------------------
 \section{Package Overview}
@@ -265,16 +265,21 @@ Documentation of the code base is generated via sphinx\footnote{\tt http://www.s
 
 Every user-facing class, method and function in Halotools has a docstring describing its general purpose, its inputs and output, and also providing an explicit example usage. The docstring for many functions with complex behavior comes with a hyperlink to a separate section of the documentation in which mathematical derivations and algorithm notes are provided. The documentation also includes a large number of step-by-step tutorials and example analyses. The goal of these tutorials is more than simple code demonstration: the tutorials are intended to be a pedagogical tool illustrating how to analyze simulations and study models of the galaxy-halo connection in an efficient and reproducible manner. 
 
-
-%---------------------------
-\section{Planned Features}
-\label{section:planned_features}
-%---------------------------
-
 %---------------------------
 \section{Conclusion}
 \label{section:conclusion}
 %---------------------------
+
+We have presented the first official release of the Halotools package (v0.2), a specialized python package for building and testing models of the galaxy-halo connection, and analyzing catalogs of dark matter halos. The core functionality of the package includes:
+
+\bit
+\item Fast generation of synthetic galaxy populations using HODs, abundance matching, and related methods
+\item Efficient algorithms for calculating galaxy clustering, lensing, z-space distortions, and other astronomical statistics
+\item A modular, object-oriented framework for designing galaxy evolution models
+\item End-to-end support for reducing halo catalogs and caching them as fast-loading hdf5 files
+\eit
+
+We would like to conclude this paper with an invitation. As can be seen from the public record of package development on GitHub, contributions of all kinds are warmly welcomed. This could include submitting a Pull Request of a novel feature that has been developed for a scientific publication, or simply submitting a bug report or requesting documentation clarification. It is the hope of the development team that scientists who find the package useful in their own work will also use Halotools as an outlet to share their expertise in large-scale structure in a way that can benefit the wider astronomical community. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ACKNOWLEDGEMENTS %%%%%%%%%%%%%%%%%%%%%
 
