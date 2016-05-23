@@ -108,7 +108,7 @@ In the subsections below we outline each of these sub-packages in turn, though w
 One of the most tedious tasks in simulation analysis is the initial process of getting started with a halo catalog: reading large data files storing the halos (typically ASCII-formatted), making cuts on halos, adding additional columns, and storing the reduced and value-added catalog on disk for later use. In our experience with simulation analysis, one of the most common sources of bugs comes from these initial bookkeeping exercises. 
 
 \begin{lstlisting}[float=*t, label=some-code,caption = Loading a cached halo catalog into memory \label{code:cachedsim}]
-from halotools.mock_observables import CachedHaloCatalog
+from halotools.sim_manager import CachedHaloCatalog
 halocat = CachedHaloCatalog(simname = `bolshoi', redshift = 0.5)
 
 print(halocat.halo_table[0:9]) # view the first ten halos in the catalog
@@ -136,8 +136,54 @@ The Halotools developers manage a collection of pre-processed halo catalogs that
 All Halotools models of the galaxy-halo connection are contained in the \emodels sub-package. Halotools models come into two categories: {\em composite models} and {\em component models}. 
 A {\em composite model} is a complete description of the mapping(s) between dark matter halos and all properties of their resident galaxy population. A composite model provides sufficient information to populate an ensemble of halos with a Monte Carlo realization of a galaxy population. All composite models are built from a collection of independently-defined {\em component models}. A component model provides a map between dark matter halos and a single property of the resident galaxy population. Examples component models include the stellar-to-halo mass relation, an NFW radial profile or the halo mass-dependence of the quenched fraction.
 
+\subsubsection{Model styles}
+\label{subsubsection:modelstyles}
+
+Halotools composite models come in two different types: HOD-style models and subhalo-based models. In HOD-style models, there is no connection between the abundance of satellite galaxies in a host halo and the number of subhalos in that host halo. In these models, satellite abundance in each halo is determined by a Monte Carlo realization of some analytical model. Examples of this approach to the galaxy-halo connection include the HOD \citep{berlind02} and CLF \citep{yang03}, as well as extensions of these that include additional features such as color-dependence \citep{tinker_etal13}. 
+
+By contrast, in subhalo-based models there is a one-to-one correspondence between subhalos and satellite galaxies. In these models, each host halo in the simulation is connected to a single central galaxy, and each subhalo is connected to a single satellite. Examples include traditional abundance matching \citep{kravtsov04a,conroy06}, age matching \citep{HW13a}, and parameterized stellar-to-halo mass models  \citep{behroozi10, moster10}.
+
+\subsubsection{Prebuilt models}
+\label{subsubsection:prebuiltmodels}
+
+Halotools ships with a handful of fully formed prebuilt composite models, each of which has been designed around a model chosen from the literature. All pre-built models can directly populate a simulation with a mock catalog and make observational predictions that can be compared to measurements made on a real galaxy sample. You need only choose the pre-built model and simulation snapshot that is appropriate for your science application, and you can immediately generate a Monte Carlo realization of the model with the syntax shown. The syntax in code block \ref{code:mockpop} shows how to populate the Bolshoi simulation at $z=0$ with an HOD-style model based on \citet{leauthaud11b}. All Halotools models can populate halo catalogs with mock galaxies using the same syntax shown in code block \ref{code:mockpop}, regardless of the features of the model or the selected halo catalog. 
+ 
+\begin{lstlisting}[float=*t, label=some-code,caption = Creating a mock galaxy catalog \label{code:mockpop}]
+from halotools.sim_manager import CachedHaloCatalog
+halocat = CachedHaloCatalog(simname = `bolshoi', redshift = 0)
+
+from halotools.empirical_models import PrebuiltHodModelFactory
+model = PrebuiltHodModelFactory(`leauthaud11')
+
+model.populate_mock(halocat)
+print(model.mock.galaxy_table[0:9]) # view the first ten galaxies in the catalog
+\end{lstlisting}
+
+Calling the {\em populate\_mock} method the first time creates the {\em mock} attribute of a model, and triggers a large amount of pre-processing that need only be done once. The algorithm used to repopulate mock catalogs takes advantage of this pre-processing, so that subsequent calls to {\em model.mock.populate()} are far faster. For example, the mock population shown in code block \ref{code:mockpop} based on the \citet{leauthaud11b} model takes just a few hundred milliseconds on a modern laptop. 
+
+The behavior of all Halotools models is controlled by the {\em param\_dict} attribute, a python dictionary where the values of the model parameters are stored. By changing the values of the parameters in the {\em param\_dict}, users can generate alternate mock catalogs based on the updated parameter values. The process of {\em param\_dict} values and repeatedly populating mock catalogs is the typical workflow in an MCMC-type analysis conducted with Halotools. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%% FIGURE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}
+\begin{center}
+\includegraphics[width=8.3cm]{./FIGS/halotools_design.png}
+\caption{
+Cartoon example of how an HOD-style model can be built with the Halotools factory design pattern. Users select a set of {\em component model} features of their choosing, and compose them together into a {\em composite model} using the appropriate factory. Users wishing to quickly get up-and-running can instead select a prebuilt composite model that ships with the package. Either way, {\tt halotools.readthedocs.io} contains extensive step-by-step tutorials and worked examples demonstrating how to use Halotools to model the galaxy-halo connection. 
+}
+\label{fig:modeling}
+\end{center}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+\subsubsection{User-built models}
+\label{subsubsection:userbuiltmodels}
+
+The \emodels sub-package provides far more functionality than a simple set of prebuilt composite models that are ready to generate mock catalogs ``out-of-the-box". Halotools has special factory classes that allow users to build their own models connecting galaxies to the dark matter halos that host them. These factories are the foundation of the object-oriented platform that Halotools users can exploit to design their own models of the galaxy-halo connection. This model-building platform is the centerpiece of the \emodels sub-package.
+
+Users choose between a set of component models of the galaxy population and compose them together into a composite model using the appropriate Halotools factory class; HOD-style models are built by the {\em HodModelFactory} class, subhalo-based models are built by the {\em SubhaloModelFactory}. Composing together different collections of components gives users a large amount of flexibility to construct highly complex models of galaxy evolution. There are no limits on the number of component models that can be chosen, nor on the number or kind of galaxy population(s) that make up the universe in the user-defined composite model. Figure \ref{fig:modeling} shows a cartoon example of how an HOD-style can be built in Halotools. 
+
+In choosing component models, users are not restricted to choose from the set of features that ship with the Halotools package. Users are free to write their own component models and use the Halotools factories to build the composite, to write just one new component model and include it in a collection of Halotools-provided components, or anywhere in between. This way, users mostly interested in a specific feature of the galaxy population can focus exclusively on developing code for that one feature, and use existing Halotools components to model the remaining features. The factory design pattern makes it simple to swap out individual features while keeping all other model aspects identical, facilitating users to ask targeted science questions about galaxy evolution and answer these questions via direct computation. 
 
 %---------------------------
 \subsection{Mock Observations}
