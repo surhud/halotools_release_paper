@@ -85,14 +85,22 @@ We  present the first official release of Halotools (v0.2), a community-driven p
 \label{section:introduction}
 %---------------------------
 
-Halotools is an affiliated package\footnote{\tt http://www.astropy.org/affiliated} of Astropy \citep{astropy}.
+Empirical modeling of the galaxy-halo connection has become a mature subfield of the science of galaxy formation. Although the modern form of galaxy-halo modeling has been in place for over ten years, there exists no common code base for carrying out large-scale structure calculations. Considering, for example, the advances in CMB science made possible by Boltzmann-solvers such as CMBFast \citep{cmbfast}, CAMB \citep{camb} and CLASS \citep{class}, there are clear precedents for how scientists working in a well-defined subfield can mutually benefit from such a code base. 
+
+Over the past several years, the Python programming language\footnote{{\tt http://www.python.org}} has become the most popular language in the field of astronomy \citep{momcheva_tollerud15}. Many aspects of Python make this language well-suited for a fast-moving scientific field: dynamic typing and automated memory management facilitate rapid development; stable, high-performance libraries such as {\tt Numpy} and {\tt Scipy} free scientists from the need to implement common numerical routines in scientific computing; the Python community has developed a broad toolkit for transparently documenting and testing code in an automated fashion; Python users find its uncluttered syntax to be highly readable and expressive. A significant additional factor leading to the widespread use of Python in astronomy has been the development of  Astropy \citep{astropy}, a project with the express goal of providing single core package for Astronomy in Python and fostering interoperability between Python astronomy packages.
+
+Motivated by these trends, we present the first official release of Halotools (v0.2), an open-source, object-oriented python package for building and testing models of the galaxy-halo connection. Halotools is community-driven, and already includes contributions from over a dozen scientists spread across numerous universities. Designed with high-speed performance in mind, the package generates mock observations of synthetic galaxy populations with sufficient speed to conduct expansive MCMC likelihood analyses over a diverse and highly customizable set of models.
+
+Halotools is an affiliated package\footnote{\tt http://www.astropy.org/affiliated} of Astropy. Affiliated packages are not part of the Astropy core package, but extend the core with typically more domain-specific functionality while maintaining its engineering and interface standards. Since its inception, Halotools has been written in fully public view on {\tt https://github.com/astropy/halotools}, in the spirit of open, reproducible science. 
+
+In this paper, we give an overview of the primary features of the Halotools package. This paper is not intended to be viewed as code documentation, which is available online at {\tt halotools.readthedocs.io}. Our aim here is to give a simple overview of the features of the package, and to serve as a standard reference for scientists using Halotools to support their published work. We outline the basic structure of the code in \S\ref{section:overview}, describe the development workflow in \S\ref{section:development}, discuss future features in \S\ref{section:planned_features} and conclude in \S\ref{section:conclusion}. 
 
 %---------------------------
 \section{Package Overview}
 \label{section:overview}
 %---------------------------
 
-Halotools is composed almost entirely in python with syntax that is compatible with both 2.7.x and 3.x versions of the language. Bounds-checking, exception-handling, and high-level control flow are always written in pure python. Whenever possible, performance-critical functions are written to be trivially parallelized using python's native {\tt multiprocessing} module. Halotools relies heavily on vectorized functions in {\tt Numpy} as a core optimization strategy. However, in many cases there is simply no memory efficient way to vectorize a calculation, and it becomes necessary to write explicit loops over large numbers of points. In such situations, care is taken to pinpoint the specific part of the calculation that is the bottleneck; that section, and that section only, is written in cython. 
+Halotools is composed almost entirely in python with syntax that is compatible with both 2.7.x and 3.x versions of the language. Bounds-checking, exception-handling, and high-level control flow are always written in pure python. Whenever possible, performance-critical functions are written to be trivially parallelized using python's native {\tt multiprocessing} module. Halotools relies heavily on vectorized functions in {\tt Numpy} as a core optimization strategy. However, in many cases there is simply no memory efficient way to vectorize a calculation, and it becomes necessary to write explicit loops over large numbers of points. In such situations, care is taken to pinpoint the specific part of the calculation that is the bottleneck; that section, and that section only, is written in cython \citep{cython}. 
 
 Halotools is designed with a high degree of modularity, so that users can pick and choose the features that are suitable to their science applications. At the highest level, this modularity is reflected in the organization of the package into sub-packages. For Halotools v0.2, there are three major sub-packages. The \emodels sub-package described in \S\ref{subsection:empirical_models} contains the implementation of models of the galaxy-halo connection, as well as a flexible object-oriented platform for users to design their own models. The \mockobs sub-package described in \S\ref{subsection:mock_observables} contains a collection of functions that can be used to generate predictions for models in a manner that can be directly compared to astronomical observations. Many of the functions in \mockobs should also be of general use in the analysis of halo catalogs. The \sims sub-package described in \S\ref{subsection:sim_manager} is responsible for reducing ``raw" halo catalogs into efficiently organized fast-loading hdf5 files, and for creating and keeping track of a persistent memory of where the simulation data is stored on disk. 
 
@@ -261,6 +269,11 @@ Every user-facing class, method and function in Halotools has a docstring descri
 %---------------------------
 \section{Planned Features}
 \label{section:planned_features}
+%---------------------------
+
+%---------------------------
+\section{Conclusion}
+\label{section:conclusion}
 %---------------------------
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ACKNOWLEDGEMENTS %%%%%%%%%%%%%%%%%%%%%
