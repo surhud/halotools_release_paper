@@ -123,12 +123,11 @@ print(halocat.halo_table[0:9]) # view the first ten halos in the catalog
 print(halocat.Lbox, halocat.particle_mass) # inspect the halo catalog metadata
 \end{lstlisting}
 
-The \sims sub-package has been written to standardize this process so that users can get started with full-fledge halo catalog analysis from just a few lines of code. The {\tt sim\_manager.RockstarHlistReader} class allows users to quickly create a Halotools-formatted catalog starting from the typical ASCII output of the {\tt Rockstar} halo-finder \citep{rockstar_trees, behroozi_rockstar11}. Users wishing to work with catalogs of halos identified by algorithms other than {\tt Rockstar} can use the {\tt sim\_manager.TabularAsciiReader} class to initially process their ascii data. Both readers are built around a convenient API that uses Python's native ``lazy evaluation" functionality to select on-the-fly only those columns and rows that are of interest, making these readers highly memory efficient. 
+The \sims sub-package has been written to standardize this process so that users can get started with full-fledge halo catalog analysis from just a few lines of code. The {\tt sim\_manager.RockstarHlistReader} class allows users to quickly create a Halotools-formatted catalog starting from the typical ASCII output of the {\tt Rockstar} halo-finder \citep{behroozi_rockstar11, rockstar_trees}. Users wishing to work with catalogs of halos identified by algorithms other than {\tt Rockstar} can use the {\tt sim\_manager.TabularAsciiReader} class to initially process their ascii data. Both readers are built around a convenient API that uses Python's native ``lazy evaluation" functionality to select on-the-fly only those columns and rows that are of interest, making these readers highly memory efficient. 
 
 All Halotools-formatted catalogs are python objects storing the halo catalog itself in the form of an Astropy Table, and also storing some metadata about the simulated halos. In order to build an instance of a Halotools-formatted catalog, a large collection of self-consistency checks about the halo data and metadata are performed, and an exception is raised if any inconsistency is detected. These checks are automatically carried out at the initial processing stage, and also every time the catalog is loaded into memory, to help ensure that the catalog is processed correctly and does not become corrupt over time. 
 
 The \sims sub-package allows users to cache their processed halo catalogs when they are saved to disk, creating the option to load their catalogs into memory with the simple and intuitive syntax shown in code block \ref{code:cachedsim}. 
-
 
 The cached simulations are stored in the form of an hdf5 file.\footnote{\tt http://www.h5py.org}. This binary file format is fast-loading and permits metadata to be bound directly to the file in a transparent manner, so that the cached binary file is a self-expressive object. The {\tt sim\_manager.HaloTableCache} class provides an object-oriented interface for managing the cache of simulations, but users are also free to work directly with the cache log, which is a simple, human-readable text file stored in \$HOME/.astropy/cache/halotools/halo\_table\_cache\_log.txt.
 
@@ -285,6 +284,13 @@ We would like to conclude this paper with an invitation. As can be seen from the
 
 \section{acknowledgments}
 
+APH would like to express profound gratitude to the Yale Center for Astronomy and Astrophysics, and Meg Urry in particular, for their carte blanche support for this long-term and extremely labor-intensive project. Without the support and creative freedom offered by the YCAA Prize fellowship, there would be no Halotools. 
+
+APH is grateful to Nikhil Padmanabhan and Frank van den Bosch for invaluable and continuing guidance. APH gives special thanks to Jim Ford for every last groove of {\em Harlan County}. 
+
+We thank all Halotools users who have patiently helped improve the package by providing feedback and critiques from the project's alpha-stages to the present. We thank the Astropy developers for the package-template, which has been critical to the entire process of Halotools development. 
+
+A portion of this work was also supported by the National Science Foundation under grant PHYS-1066293 and the hospitality of the Aspen Center for Physics. This work was also partially funded by the U.S. National Science Foundation under grant AST 1517563. 
 
 \bibliography{./halotools}
 
