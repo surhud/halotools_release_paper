@@ -5,4 +5,6 @@
 >>> model = PrebuiltHodModelFactory('leauthaud11')
 
 >>> model.populate_mock(halocat)
->>> print(model.mock.galaxy_table[0:9]) # view the first ten galaxies in the catalog
+
+View the first ten galaxies in the catalog
+>>> print(model.mock.galaxy_table[0:9]) 
