@@ -7,4 +7,4 @@
 >>> model.populate_mock(halocat)
 
 View the first ten galaxies in the catalog
->>> print(model.mock.galaxy_table[0:9]) 
+>>> print(model.mock.galaxy_table[0:10]) 
