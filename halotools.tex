@@ -74,7 +74,7 @@ Andrew Zentner\altaffilmark{10}
 
 \begin{abstract}
 
-We  present the first official release of {\tt Halotools} (v0.2), a community-driven Python package designed to build and test models of the galaxy--halo connection. {\tt Halotools} provides a modular platform for creating mock universes with a rich variety of models of galaxy evolution, such as the HOD, CLF, abundance matching, assembly biased models, halo profiles, velocity bias, and many other model styles and features. The package has an extensive, heavily optimized toolkit to make mock observations on a synthetic galaxy population, including galaxy clustering, galaxy--galaxy lensing, galaxy group identification, RSD multipoles, void statistics, pairwise velocities and others. {\tt Halotools} is written in an object-oriented style that enables complex models to be built from a set of simple, interchangeable components, including those of your own creation. {\tt Halotools} has a rigorously maintained automated testing suite and is exhaustively documented on \url{http://halotools.readthedocs.io}, which includes quickstart guides, source code notes and a large collection of worked examples. The documentation effectively serves as an online textbook on how to build empirical models of galaxy formation with Python. We conclude by describing how {\tt Halotools} can be used to analyze existing datasets to obtain robust and novel constraints on galaxy evolution models, and by outlining the {\tt Halotools} program to prepare the field of cosmology for the arrival of Stage IV dark energy experiments.
+We  present the first official release of {\tt Halotools} (v0.2), a community-driven Python package designed to build and test models of the galaxy--halo connection. {\tt Halotools} provides a modular platform for creating mock universes with a rich variety of models of galaxy evolution, such as the HOD, CLF, abundance matching, assembly biased models, halo profiles, velocity bias, and many other model styles and features. The package has an extensive, heavily optimized toolkit to make mock observations on a synthetic galaxy population, including galaxy clustering, galaxy--galaxy lensing, galaxy group identification, RSD multipoles, void statistics, pairwise velocities and others. {\tt Halotools} is written in an object-oriented style that enables complex models to be built from a set of simple, interchangeable components, including those of your own creation. {\tt Halotools} has a rigorously maintained automated testing suite and is exhaustively documented on \url{http://halotools.readthedocs.io}, which includes quickstart guides, source code notes and a large collection of worked examples. The documentation effectively serves as an online textbook on how to build empirical models of galaxy formation with Python. 
 \end{abstract} 
 
 \maketitle
@@ -270,11 +270,20 @@ Every user-facing class, method and function in {\tt Halotools} has a docstring 
 We have presented the first official release of the {\tt Halotools} package (v0.2), a specialized Python package for building and testing models of the galaxy--halo connection, and analyzing catalogs of dark matter halos. The core functionality of the package includes:
 
 \bit
-\item Fast generation of synthetic galaxy populations using HODs, abundance matching, and related methods
-\item Efficient algorithms for calculating galaxy clustering, lensing, z-space distortions, and other astronomical statistics
-\item A modular, object-oriented framework for designing galaxy evolution models
-\item End-to-end support for reducing halo catalogs and caching them as fast-loading hdf5 files
+\item Fast generation of synthetic galaxy populations using HODs, abundance matching, and related methods.
+\item Efficient algorithms for calculating galaxy clustering, lensing, z-space distortions, and other astronomical statistics.
+\item A modular, object-oriented framework for designing galaxy evolution models.
+\item End-to-end support for reducing halo catalogs and caching them as fast-loading hdf5 files.
 \eit
+
+We offer several examples below of typical use-cases for which {\tt Halotools} was designed. This list is not intended to be complete, but simply to illustrate the full-featured nature of the package, which includes functionality supporting both galaxy evolution science as well as cosmological simulation analysis. We remind the reader that \url{https://halotools.readthedocs.io} contains extensive tutorials and step-by-step guides that can be used as examples for how to carry out each of the example studies below and more. 
+
+\ben
+\item Constrain traditional HOD model parameters with an MCMC-type analysis of observational measurements of projected galaxy clustering $w_{\rm p}(\rproj).$
+\item Build a novel empirical model of galaxy-halo co-evolution and derive MCMC-type constraints on its parameters using non-traditional large-scale structure measurements such as the group multiplicity function $g({\rm N})$ or the marked correlation function $\mathcal{M}(\rproj).$
+\item Conduct a study of the connection between the radial profiles of dark matter subhalos and the mass accretion history of their parent halo. 
+\item Build mock catalogs of galaxies that include forward-models of observational systematics such as intrinsic alignments and/or deblending errors in galaxy shapes. 
+\een
 
 We would like to conclude this paper with an invitation. As can be seen from the public record of package development on GitHub, contributions of all kinds are warmly welcomed. This could include submitting a Pull Request of a novel feature that has been developed for a scientific publication, or simply submitting a bug report or requesting documentation clarification. It is the hope of the development team that scientists who find the package useful in their own work will also use {\tt Halotools} as an outlet to share their expertise in large-scale structure in a way that can benefit the wider astronomical community. 
 
@@ -282,7 +291,7 @@ We would like to conclude this paper with an invitation. As can be seen from the
 
 \section{acknowledgments}
 
-APH would like to express profound gratitude to the Yale Center for Astronomy and Astrophysics, and Meg Urry in particular, for their carte blanche support for this long-term and extremely labor-intensive project. Without the support and creative freedom offered by the YCAA Prize fellowship, there would be no {\tt Halotools}. 
+APH would like to express profound gratitude to the Yale Center for Astronomy and Astrophysics, and Meg Urry in particular, for their carte blanche support for this long-term and extremely labor-intensive project. Without the creative freedom offered by the YCAA Prize fellowship, there would be no {\tt Halotools}. 
 
 APH is grateful to Nikhil Padmanabhan and Frank van den Bosch for invaluable and continuing guidance. APH gives special thanks to Jim Ford for every last groove of {\em Harlan County}. 
 
