@@ -51,7 +51,7 @@
 \title{High-Precision Forward Modeling of Large-Scale Structure: \\An open source approach with Halotools}
 
 \author{Andrew P. Hearin\altaffilmark{1}, Duncan Campbell\altaffilmark{2}, Erik Tollerud\altaffilmark{2,3},\\and\\
-Peter Behroozi\altaffilmark{4}, Benedikt Diemer\altaffilmark{5}, 
+Peter Behroozi\altaffilmark{15,16}, Benedikt Diemer\altaffilmark{5}, 
 Nathan J. Goldbaum\altaffilmark{8}, Elise Jennings\altaffilmark{13,14}, Alexie Leauthaud\altaffilmark{9}, Yao-Yuan Mao\altaffilmark{11, 12}, 
 Surhud More\altaffilmark{4}, John Parejko\altaffilmark{4}, Manodeep Sinha\altaffilmark{6,7}, Brigitta Sipocz\altaffilmark{4}, 
 Andrew Zentner\altaffilmark{10} 
@@ -70,13 +70,16 @@ Andrew Zentner\altaffilmark{10}
 \altaffiltext{12}{SLAC National Accelerator Laboratory, Menlo Park, CA, 94025, USA}
 \altaffiltext{13}{Center for Particle Astrophysics, Fermi National Accelerator Laboratory MS209, P.O. Box 500, Kirk Rd. \& Pine St., Batavia, IL 60510-0500}
 \altaffiltext{14}{Kavli Institute for Cosmological Physics, Enrico Fermi Institute, University of Chicago, Chicago, IL 60637}
+\altaffiltext{15}{Department of Astronomy, University of California, Berkeley, Berkeley CA 94720, USA}
+\altaffiltext{16}{Hubble Fellow}
 
 %----------------------------------------------------------------
 %%%%%%%%%%%%%%%%%%%%%%%  A B S T R A C T %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{abstract}
 
-We  present the first stable release of {\tt Halotools} (v0.2), a community-driven Python package designed to build and test models of the galaxy--halo connection. {\tt Halotools} provides a modular platform for creating mock universes with a rich variety of models of galaxy evolution, such as the HOD, CLF, abundance matching, assembly biased models, halo profiles, velocity bias and many other model styles and features. The package has an extensive, heavily optimized toolkit to make mock observations on a synthetic galaxy population, including galaxy clustering, galaxy--galaxy lensing, galaxy group identification, RSD multipoles, void statistics, pairwise velocities and others. {\tt Halotools} is written in an object-oriented style that enables complex models to be built from a set of simple, interchangeable components, including those of your own creation. {\tt Halotools} has a rigorously maintained automated testing suite and is exhaustively documented on \url{http://halotools.readthedocs.io}, which includes quickstart guides, source code notes and a large collection of tutorials. The documentation effectively serves as an online textbook on how to build empirical models of galaxy formation with Python. 
+We  present the first stable release of {\tt Halotools} (v0.2), a community-driven Python package designed to build and test models of the galaxy--halo connection. {\tt Halotools} provides a modular platform for creating mock universes with the HOD, CLF, abundance matching, assembly biased models, and many other galaxy occupation models, allowing for custom halo profiles, velocity bias and other features. The package has an optimized toolkit to make mock observations on a synthetic galaxy population, including galaxy clustering, galaxy--galaxy lensing, galaxy group identification, RSD multipoles, void statistics, pairwise velocities and others. {\tt Halotools} is object-oriented, enabling complex models to be built from a set of simple, interchangeable components, including those of your own creation. {\tt Halotools} has an automated testing suite and is exhaustively documented on \url{http://halotools.readthedocs.io}, which includes quickstart guides, source code notes and a large collection of tutorials. The documentation serves as an online textbook on how to build empirical models of galaxy formation with Python. 
+
 \end{abstract} 
 
 \maketitle
@@ -294,20 +297,12 @@ We would like to conclude this paper with an invitation. As can be seen from the
 
 APH would like to express profound gratitude to the Yale Center for Astronomy and Astrophysics, and Meg Urry in particular, for their carte blanche support for this long-term and extremely labor-intensive project. Without the creative freedom offered by the YCAA Prize fellowship, there would be no {\tt Halotools}. 
 
-APH gives special thanks to Jim Ford for every last groove of {\em Harlan County}. 
-
-APH is grateful to Nikhil Padmanabhan and Frank van den Bosch for invaluable and continuing guidance. DC would like to thank Nikhil Padmanabhan and Frank van den Bosch for their patience and support while developing this package.
+APH gives special thanks to Jim Ford for every last groove of {\em Harlan County}. APH is grateful to Nikhil Padmanabhan and Frank van den Bosch for invaluable and continuing guidance. DC would like to thank Nikhil Padmanabhan and Frank van den Bosch for their patience and support while developing this package.
 
 We thank the {\tt Astropy} developers for the package-template, which has been critical to the entire process of {\tt Halotools} development. 
 We would like to thank the NumPy, SciPy, IPython, Matplotlib, GitHub, ReadTheDocs, Travis, AppVeyor and Coveralls communities for their extremely useful free software products. We thank all {\tt Halotools} users who have patiently helped improve the package by providing feedback and critiques from the project's alpha-stages to the present. Thanks to Doug Watson and Matt Becker for productive discussions at a formative stage of {\tt Halotools} development, and Yu Feng for help in optimizing the \mockobs sub-package and comments on an early draft of this paper. 
 
-A portion of this work was also supported by the National Science Foundation under grant PHYS-1066293 and the hospitality of the Aspen Center for Physics. This work was also partially funded by the U.S. National Science Foundation under grant AST 1517563. 
-
-Support for EJT was provided by NASA through Hubble Fellowship grants \#51316.01 awarded by the Space Telescope Science Institute, which is operated by the Association of Universities for Research in Astronomy, Inc., for NASA, under contract NAS 5-26555.  
-
-NJG is funded by NSF grant ACI-1535651 as well as by the Gordon and Betty Moore Foundation's Data-Driven Discovery Initiative through Grant GBMF4651.
-
-EJ is supported by Fermi Research Alliance, LLC under the U.S. Department of Energy under contract No. DEAC02-07CH11359. 
+A portion of this work was also supported by the National Science Foundation under grant PHYS-1066293 and the hospitality of the Aspen Center for Physics. This work was also partially funded by the U.S. National Science Foundation under grant AST 1517563. Support for EJT was provided by NASA through Hubble Fellowship grants \#51316.01 awarded by the Space Telescope Science Institute, which is operated by the Association of Universities for Research in Astronomy, Inc., for NASA, under contract NAS 5-26555.  PB was supported through program number HST-HF2-51353.001-A, provided by NASA through a Hubble Fellowship grant from STScI, which is operated by the Association of Universities for Research in Astronomy, Incorporated, under NASA contract NAS5-26555. NJG is funded by NSF grant ACI-1535651 as well as by the Gordon and Betty Moore Foundation's Data-Driven Discovery Initiative through Grant GBMF4651. EJ is supported by Fermi Research Alliance, LLC under the U.S. Department of Energy under contract No. DEAC02-07CH11359. 
 
 \bibliographystyle{yahapj}
 \bibliography{./halotools}
